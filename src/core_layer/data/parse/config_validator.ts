@@ -18,7 +18,7 @@ const AppConfigSchema = z.object({
     user: z.string()
   }),
   logging: z.object({
-    level: z.enum(['debug', 'info', 'warn', 'error']),
+    level: z.enum(['trace', 'debug', 'info', 'warn', 'error']),
     format: z.enum(['json', 'text'])
   }),
   api: z.object({

@@ -14,8 +14,8 @@ database:
   user: ccb_user
 
 logging:
-  level: debug
-  format: json
+  level: trace
+  format: text
 
 api:
   timeout: 30000

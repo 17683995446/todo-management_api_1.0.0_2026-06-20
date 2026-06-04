@@ -28,6 +28,7 @@ describe('Logger', () => {
   it('should not log debug messages when level is info', () => {
     mockConfig.logging.level = 'info'
     const logger = new ConsoleLogger(mockConfig)
+    consoleLogSpy.mockClear()
     logger.debug('test debug')
     expect(consoleLogSpy).not.toHaveBeenCalled()
   })
