@@ -1,0 +1,22 @@
+app:
+  name: Claude Code Binary Tree
+  version: 1.0.0
+  debug: false
+
+server:
+  host: 0.0.0.0
+  port: 80
+
+database:
+  host: prod-db.example.com
+  port: 5432
+  name: ccb_prod
+  user: ccb_prod_user
+
+logging:
+  level: warn
+  format: json
+
+api:
+  timeout: 60000
+  rate_limit: 500
