@@ -1,0 +1,19 @@
+app:
+  name: Claude Code Binary Tree
+  version: 1.0.0
+  debug: true
+
+server:
+  host: 127.0.0.1
+  port: 8080
+
+# 数据库路径通过环境变量 DB_PATH 配置（默认 data/todos.db）
+# 当前使用 SQLite，无需数据库连接配置
+
+logging:
+  level: info
+  format: text
+
+api:
+  timeout: 30000
+  rate_limit: 100

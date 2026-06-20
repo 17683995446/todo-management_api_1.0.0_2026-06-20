@@ -1,5 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import { InMemoryRepository } from '../../../../src/core_layer/data/access/in_memory_repository.js'
+import { ConsoleLogger } from '../../../../src/core_layer/logic/logger.js'
+import type { AppConfig } from '../../../../src/core_layer/data/model/app_config.js'
 import type { BaseEntity } from '../../../../src/core_layer/data/access/base_repository.js'
 
 interface TestEntity extends BaseEntity {
@@ -10,7 +12,15 @@ describe('InMemoryRepository', () => {
   let repo: InMemoryRepository<TestEntity>
 
   beforeEach(() => {
-    repo = new InMemoryRepository<TestEntity>()
+    const config: AppConfig = {
+      app: { name: 'test', version: '1.0.0', debug: true },
+      server: { host: 'localhost', port: 8080 },
+      database: { host: 'localhost', port: 5432, name: 'test', user: 'test' },
+      logging: { level: 'trace', format: 'text' },
+      api: { timeout: 30000, rate_limit: 100 }
+    }
+    const logger = new ConsoleLogger(config, 'test-repo-logger')
+    repo = new InMemoryRepository<TestEntity>(logger)
   })
 
   it('should create an entity', async () => {

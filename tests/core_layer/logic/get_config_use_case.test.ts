@@ -14,7 +14,7 @@ describe('GetConfigUseCase', () => {
     }
     const logger = new ConsoleLogger(mockConfig, 'test-logger')
     const useCase = new GetConfigUseCase(logger)
-    const request: GetConfigRequest = { env: 'dev' }
+    const request: GetConfigRequest = { env: 'development' }
     const result = await useCase.execute(request)
     expect(result.config.app.name).toBeDefined()
   })

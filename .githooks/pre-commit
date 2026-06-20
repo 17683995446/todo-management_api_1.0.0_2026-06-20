@@ -1,0 +1,19 @@
+#!/bin/sh
+# Pre-commit hook: 在提交前运行类型检查和 lint
+# 安装方式: git config core.hooksPath .githooks
+
+echo "▶ 运行类型检查..."
+npx tsc --noEmit
+if [ $? -ne 0 ]; then
+  echo "✗ 类型检查失败，请修复后再提交"
+  exit 1
+fi
+
+echo "▶ 运行 lint..."
+npx biome check src/ tests/
+if [ $? -ne 0 ]; then
+  echo "✗ lint 检查失败，请运行 'npm run lint:fix' 修复后再提交"
+  exit 1
+fi
+
+echo "✓ 所有检查通过"

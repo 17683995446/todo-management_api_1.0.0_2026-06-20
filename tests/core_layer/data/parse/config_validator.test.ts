@@ -24,4 +24,16 @@ describe('config_validator', () => {
     }
     expect(() => validate_config(invalid_config)).toThrow()
   })
+
+  it('should validate config without optional database section', () => {
+    const configWithoutDb = {
+      app: { name: 'test', version: '1.0.0', debug: true },
+      server: { host: 'localhost', port: 8080 },
+      logging: { level: 'debug', format: 'json' },
+      api: { timeout: 30000, rate_limit: 100 }
+    }
+    const result = validate_config(configWithoutDb)
+    expect(result.app.name).toBe('test')
+    expect(result.database).toBeUndefined()
+  })
 })

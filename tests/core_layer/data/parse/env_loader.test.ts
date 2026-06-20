@@ -3,8 +3,8 @@ import { get_env_var, get_env } from '../../../../src/core_layer/data/parse/env_
 
 describe('env_loader', () => {
   beforeEach(() => {
-    delete process.env.TEST_ENV
-    delete process.env.NODE_ENV
+    Reflect.deleteProperty(process.env, 'TEST_ENV')
+    Reflect.deleteProperty(process.env, 'NODE_ENV')
   })
 
   it('should get existing env var', () => {

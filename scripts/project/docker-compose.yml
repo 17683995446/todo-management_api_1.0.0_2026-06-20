@@ -1,12 +1,67 @@
-version: '3.8'
+# Production-like Docker Compose stack.
+# Usage: docker compose -f scripts/project/docker-compose.yml up -d
 
 services:
   app:
     build:
       context: ../..
       dockerfile: scripts/project/Dockerfile
+    container_name: ccb-app
     ports:
       - "80:80"
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=docker
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     restart: unless-stopped
+    networks:
+      - ccb-network
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: ccb-postgres
+    environment:
+      POSTGRES_USER: ccb_docker_user
+      POSTGRES_PASSWORD: ccb_docker_pass
+      POSTGRES_DB: ccb_docker
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ccb_docker_user -d ccb_docker"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    restart: unless-stopped
+    networks:
+      - ccb-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: ccb-redis
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    restart: unless-stopped
+    networks:
+      - ccb-network
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  ccb-network:
+    driver: bridge

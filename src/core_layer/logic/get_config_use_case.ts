@@ -12,12 +12,9 @@ export interface GetConfigResponse extends UseCaseResponse {
 }
 
 export class GetConfigUseCase extends BaseUseCase<GetConfigRequest, GetConfigResponse> {
-  private logger: Logger
-
   constructor(logger: Logger) {
-    super()
-    this.logger = logger
-    this.logger.trace('GetConfigUseCase initialized', {}, 21, 'constructor')
+    super(logger)
+    this.logger.trace('GetConfigUseCase initialized', {}, 20, 'constructor')
   }
 
   async execute(request: GetConfigRequest): Promise<GetConfigResponse> {

@@ -7,11 +7,8 @@ server:
   host: 0.0.0.0
   port: 80
 
-database:
-  host: prod-db.example.com
-  port: 5432
-  name: ccb_prod
-  user: ccb_prod_user
+# 数据库路径通过环境变量 DB_PATH 配置（默认 data/todos.db）
+# 当前使用 SQLite，无需数据库连接配置
 
 logging:
   level: warn

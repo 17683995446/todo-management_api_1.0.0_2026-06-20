@@ -1,11 +1,21 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { SlidingWindowRateLimiter } from '../../../src/core_layer/logic/rate_limiter.js'
+import { ConsoleLogger } from '../../../src/core_layer/logic/logger.js'
+import type { AppConfig } from '../../../src/core_layer/data/model/app_config.js'
 
 describe('SlidingWindowRateLimiter', () => {
   let limiter: SlidingWindowRateLimiter
 
   beforeEach(() => {
-    limiter = new SlidingWindowRateLimiter(10000, 3)
+    const config: AppConfig = {
+      app: { name: 'test', version: '1.0.0', debug: true },
+      server: { host: 'localhost', port: 8080 },
+      database: { host: 'localhost', port: 5432, name: 'test', user: 'test' },
+      logging: { level: 'trace', format: 'text' },
+      api: { timeout: 30000, rate_limit: 100 }
+    }
+    const logger = new ConsoleLogger(config, 'rate-limiter-test-logger')
+    limiter = new SlidingWindowRateLimiter(logger, 10000, 3)
   })
 
   it('should allow requests under limit', async () => {

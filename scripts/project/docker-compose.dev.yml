@@ -1,0 +1,67 @@
+# Local development Docker Compose stack.
+# Usage: docker compose -f scripts/project/docker-compose.dev.yml up -d
+
+services:
+  app:
+    build:
+      context: ../..
+      dockerfile: scripts/project/Dockerfile
+      target: builder
+    container_name: ccb-app-dev
+    ports:
+      - "8080:80"
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - ../../src:/app/src:ro
+      - ../../config:/app/config:ro
+      - /app/node_modules
+    command: ["npx", "tsx", "src/server.ts"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - ccb-dev-network
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: ccb-postgres-dev
+    environment:
+      POSTGRES_USER: ccb_user
+      POSTGRES_PASSWORD: ccb_pass
+      POSTGRES_DB: ccb_dev
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ccb_user -d ccb_dev"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    networks:
+      - ccb-dev-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: ccb-redis-dev
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    networks:
+      - ccb-dev-network
+
+volumes:
+  postgres_dev_data:
+
+networks:
+  ccb-dev-network:
+    driver: bridge

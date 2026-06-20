@@ -4,8 +4,8 @@ import type { AppConfig } from '../../../src/core_layer/data/model/app_config.js
 
 describe('Logger', () => {
   let mockConfig: AppConfig
-  let consoleLogSpy: any
-  let consoleErrorSpy: any
+  let consoleLogSpy: ReturnType<typeof vi.spyOn>
+  let consoleErrorSpy: ReturnType<typeof vi.spyOn>
 
   beforeEach(() => {
     mockConfig = {

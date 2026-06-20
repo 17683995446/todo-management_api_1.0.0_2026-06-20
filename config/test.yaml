@@ -7,11 +7,8 @@ server:
   host: 127.0.0.1
   port: 9090
 
-database:
-  host: localhost
-  port: 5432
-  name: ccb_test
-  user: ccb_user
+# 数据库路径通过环境变量 DB_PATH 配置（默认 data/todos.db）
+# 当前使用 SQLite，无需数据库连接配置
 
 logging:
   level: info

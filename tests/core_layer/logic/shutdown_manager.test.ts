@@ -20,7 +20,7 @@ describe('ShutdownManager', () => {
   })
 
   it('should add and run shutdown hooks', async () => {
-    const manager = new ShutdownManager(logger)
+    const manager = new ShutdownManager(logger, false) // 测试时不退出进程
     const hook = vi.fn(async () => {})
     manager.addHook(hook)
     await manager.shutdown()
@@ -28,11 +28,25 @@ describe('ShutdownManager', () => {
   })
 
   it('should not run shutdown twice', async () => {
-    const manager = new ShutdownManager(logger)
+    const manager = new ShutdownManager(logger, false) // 测试时不退出进程
     const hook = vi.fn(async () => {})
     manager.addHook(hook)
     await manager.shutdown()
     await manager.shutdown()
     expect(hook).toHaveBeenCalledTimes(1)
+  })
+
+  it('should not call process.exit when shouldExitOnShutdown is false', async () => {
+    const mockExit = vi.spyOn(process, 'exit').mockImplementation(() => undefined as never)
+    const manager = new ShutdownManager(logger, false) // 测试时不退出进程
+    await manager.shutdown()
+    expect(mockExit).not.toHaveBeenCalled()
+  })
+
+  it('should call process.exit when shouldExitOnShutdown is true', async () => {
+    const mockExit = vi.spyOn(process, 'exit').mockImplementation(() => undefined as never)
+    const manager = new ShutdownManager(logger, true) // 测试时退出进程
+    await manager.shutdown()
+    expect(mockExit).toHaveBeenCalled()
   })
 })
